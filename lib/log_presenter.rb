@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'colorize'
+
 # Used to present LogParser values
 class LogPresenter
   def initialize(log)
@@ -7,8 +9,10 @@ class LogPresenter
     @log = log
   end
 
-  def section(title)
-    puts "# #{title}"
+  def section(title, total=nil)
+    title  = "# #{title}".yellow
+    title += " (total of #{total})" if total
+    puts title
     yield
     puts
   end
@@ -24,7 +28,7 @@ class LogPresenter
       .map { |(page, _)| page.length}
       .max
 
-    section "#{title} (total of #{total})" do
+    section title, total do
       list.each do |page, views|
         puts [page.ljust(max_len + 1), views, pluralize(views, view_name)].join(' ')
       end
