@@ -1,0 +1,19 @@
+Metrics/LineLength:
+  Max: 100
+
+Metrics/MethodLength:
+  Max: 20
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Layout/SpaceAroundOperators:
+  AllowForAlignment: false
+  Enabled: true
+
+AllCops:
+  Exclude:
+    - Gemfile
+    - 'bin/**/*'
+    - 'spec/**/*'
+    - 'tmp/**/*'
