@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require './lib/log_parser'
+
+# I use Thor when possible, but this time we have a file as a defaut entry for all cases
+# so I use "slop" gem
+opts = Slop.parse do |o|
+  o.string '-f', '--file',    'log file path'
+  o.string '-m', '--mode',    'log mode, "unique" or "viewed" (default)', default: 'viewed'
+  o.bool   '-q', '--quiet',   'suppress fancy output'
+  o.on     '-v', '--version', 'print the version' do
+    puts LogPresenter::VERSION
+    exit
+  end
+end
+
+unless opts[:file]
+  puts opts
+  exit
+end
+
+parser  = LogParser.new opts
+present = LogPresenter.new parser
+
+unless opts.quiet?
+  present.section 'Log file' do
+    puts parser.log_file
+  end
+end
+
+case opts[:mode]
+when 'viewed'
+  present.list :most_viewed_pages, 'Most viewed pages', 'view'
+when 'unique'
+  present.list :most_unique_visitors, 'Most unique visitors', 'unique view'
+else
+  raise ArgumentError, "Mode #{opts[:mode]} is not supported"
+end
+
